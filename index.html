@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>재경관리사 CBT</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F6F1;
+  --card:#FFFFFF;
+  --ink:#22303A;
+  --muted:#7A8288;
+  --line:#DDD9CE;
+  --green:#175C4C;
+  --green-soft:#E4EEEA;
+  --redpen:#C4453D;
+  --red-soft:#F9E9E7;
+  --correct:#1E7A46;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  min-height:100vh;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+/* ===== 상단 표지 ===== */
+.masthead{
+  border-bottom:3px double var(--ink);
+  background:var(--card);
+  padding:18px 20px 14px;
+}
+.masthead-inner{max-width:1040px;margin:0 auto;display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:"Gowun Batang",serif;font-size:22px;font-weight:700;letter-spacing:.02em}
+.brand .sub{font-family:Pretendard,sans-serif;font-size:12px;font-weight:500;color:var(--muted);margin-left:8px;letter-spacing:.08em}
+.masthead-note{font-size:12px;color:var(--muted)}
+
+.wrap{max-width:1040px;margin:0 auto;padding:24px 20px 80px}
+
+/* ===== 홈 ===== */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:8px}
+.subject-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 20px;text-align:left;transition:border-color .15s, transform .1s;
+  display:flex;flex-direction:column;gap:6px;
+}
+.subject-card:hover{border-color:var(--green);transform:translateY(-2px)}
+.subject-card h2{font-size:18px;font-weight:700}
+.subject-card .count{font-size:13px;color:var(--muted)}
+.subject-card .bar{height:4px;background:var(--green);width:36px;border-radius:2px;margin-bottom:6px}
+
+.section-label{
+  font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--green);
+  text-transform:uppercase;margin:28px 0 10px;display:flex;align-items:center;gap:10px;
+}
+.section-label::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.mode-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.mode-btn{
+  border:1.5px solid var(--line);border-radius:999px;padding:8px 18px;font-size:14px;font-weight:600;
+  background:var(--card);color:var(--muted);
+}
+.mode-btn.on{border-color:var(--green);color:var(--green);background:var(--green-soft)}
+.mode-desc{font-size:13px;color:var(--muted);margin-bottom:8px}
+
+.wrongnote-card{
+  margin-top:26px;background:var(--red-soft);border:1px dashed var(--redpen);border-radius:var(--radius);
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.wrongnote-card .t{font-weight:700;color:var(--redpen)}
+.wrongnote-card .d{font-size:13px;color:var(--muted)}
+.btn{
+  display:inline-block;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;
+  background:var(--green);color:#fff;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}
+.btn.red{background:var(--redpen)}
+.btn:disabled{opacity:.4;cursor:default}
+
+/* ===== 풀이 화면 ===== */
+.solve-layout{display:grid;grid-template-columns:1fr 190px;gap:20px;align-items:start}
+.q-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px 26px 22px}
+.q-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:14px;gap:8px;flex-wrap:wrap}
+.q-meta .tag{background:var(--green-soft);color:var(--green);border-radius:4px;padding:2px 8px;font-weight:600}
+.q-text{font-size:16.5px;font-weight:600;white-space:pre-line;margin-bottom:20px}
+.q-num{font-family:"Gowun Batang",serif;font-weight:700;color:var(--green);margin-right:6px}
+
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{
+  display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:8px;
+  padding:12px 14px;text-align:left;font-size:15px;line-height:1.55;transition:border-color .12s,background .12s;
+  background:var(--card);width:100%;
+}
+.choice:hover{border-color:var(--green)}
+.choice .no{
+  flex:none;width:24px;height:24px;border:1.5px solid currentColor;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:1px;
+}
+.choice.picked{border-color:var(--ink);background:#F2F1EC}
+.choice.picked .no{color:var(--ink)}
+.choice.correct{border-color:var(--correct);background:#EAF5EE}
+.choice.correct .no{color:var(--correct);background:var(--correct);border-color:var(--correct);color:#fff}
+.choice.wrong{border-color:var(--redpen);background:var(--red-soft)}
+.choice.wrong .no{color:var(--redpen)}
+.choice:disabled{cursor:default}
+
+.explain{
+  margin-top:18px;border-top:1px dashed var(--line);padding-top:16px;font-size:14.5px;
+  white-space:pre-line;color:#3A4750;
+}
+.explain .ex-label{font-weight:800;color:var(--redpen);font-size:13px;letter-spacing:.1em;margin-bottom:6px;display:block}
+
+.nav-row{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+
+/* ===== OMR ===== */
+.omr{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 14px;
+  position:sticky;top:16px;
+}
+.omr h3{font-size:12px;letter-spacing:.14em;color:var(--muted);font-weight:700;margin-bottom:10px;text-align:center}
+.omr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.omr-cell{
+  aspect-ratio:1;border:1px solid var(--line);border-radius:50%;font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;color:var(--muted);
+}
+.omr-cell.answered{background:var(--ink);color:#fff;border-color:var(--ink)}
+.omr-cell.cur{box-shadow:0 0 0 2px var(--green)}
+.omr-cell.right{background:var(--correct);border-color:var(--correct);color:#fff}
+.omr-cell.miss{background:var(--redpen);border-color:var(--redpen);color:#fff}
+.omr-foot{margin-top:12px;font-size:12px;color:var(--muted);text-align:center}
+.omr .btn{width:100%;margin-top:10px;text-align:center}
+
+/* ===== 결과 ===== */
+.result-hero{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px;text-align:center;margin-bottom:20px;
+}
+.score-big{font-family:"Gowun Batang",serif;font-size:52px;font-weight:700;line-height:1.1}
+.score-big.pass{color:var(--green)} .score-big.fail{color:var(--redpen)}
+.pass-label{font-size:14px;font-weight:700;letter-spacing:.2em;margin-top:4px}
+.pass-label.pass{color:var(--green)} .pass-label.fail{color:var(--redpen)}
+.result-sub{font-size:13px;color:var(--muted);margin-top:8px}
+.result-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+
+.review-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px}
+.review-item .rq{font-weight:600;white-space:pre-line;margin-bottom:8px}
+.review-item .ra{font-size:14px;margin-bottom:4px}
+.mark-x{color:var(--redpen);font-weight:800}
+.mark-o{color:var(--correct);font-weight:800}
+
+.back-link{font-size:13px;color:var(--muted);text-decoration:underline;margin-bottom:14px;display:inline-block}
+
+@media(max-width:760px){
+  .solve-layout{grid-template-columns:1fr}
+  .omr{position:static;order:2}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">재경관리사 CBT<span class="sub">FINANCIAL MANAGER · 문제은행</span></div>
+    <div class="masthead-note">과목당 40문항 · 100점 만점 · <b style="color:var(--green)">70점 이상 합격</b></div>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<script src="questions.js"></script>
+<script>
+"use strict";
+const BANK = window.QUESTION_BANK || {subjects:{}};
+const $app = document.getElementById("app");
+const LS_WRONG = "jkcbt_wrong_v1";
+
+const state = {
+  view:"home",          // home | solve | result
+  mode:"practice",      // practice | exam
+  subject:null,
+  list:[],              // 현재 세션 문제 배열
+  idx:0,
+  answers:{},           // qid -> 선택번호(1-based)
+  graded:false,
+  isWrongNote:false,
+};
+
+/* ---------- 유틸 ---------- */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const allQuestions = () => Object.values(BANK.subjects).flat();
+const findQ = id => allQuestions().find(q => q.id === id);
+
+function getWrong(){ try{ return JSON.parse(localStorage.getItem(LS_WRONG)||"[]"); }catch(e){ return []; } }
+function saveWrong(arr){ localStorage.setItem(LS_WRONG, JSON.stringify([...new Set(arr)])); }
+function addWrong(id){ saveWrong([...getWrong(), id]); }
+function removeWrong(id){ saveWrong(getWrong().filter(x=>x!==id)); }
+
+/* ---------- 홈 ---------- */
+function renderHome(){
+  const subjects = Object.keys(BANK.subjects);
+  const wrongCount = getWrong().length;
+  $app.innerHTML = `
+    <div class="section-label">풀이 방식</div>
+    <div class="mode-row">
+      <button class="mode-btn ${state.mode==="practice"?"on":""}" data-mode="practice">연습모드</button>
+      <button class="mode-btn ${state.mode==="exam"?"on":""}" data-mode="exam">시험모드</button>
+    </div>
+    <p class="mode-desc">${state.mode==="practice"
+      ? "한 문제 풀 때마다 즉시 채점되고 해설이 표시됩니다."
+      : "전체를 다 푼 뒤 한 번에 채점합니다. 실전처럼 풀어보세요."}</p>
+
+    <div class="section-label">과목 선택</div>
+    <div class="home-grid">
+      ${subjects.map(s=>`
+        <button class="subject-card" data-subject="${esc(s)}">
+          <div class="bar"></div>
+          <h2>${esc(s)}</h2>
+          <div class="count">${BANK.subjects[s].length}문항 수록</div>
+        </button>`).join("")}
+    </div>
+
+    <div class="wrongnote-card">
+      <div>
+        <div class="t">✎ 오답노트</div>
+        <div class="d">틀린 문제 ${wrongCount}개가 저장되어 있습니다. 맞히면 자동으로 노트에서 지워집니다.</div>
+      </div>
+      <button class="btn red" id="btn-wrong" ${wrongCount===0?"disabled":""}>오답만 다시 풀기</button>
+    </div>`;
+
+  $app.querySelectorAll(".mode-btn").forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;renderHome();});
+  $app.querySelectorAll(".subject-card").forEach(b=>b.onclick=()=>startSession(b.dataset.subject,false));
+  const bw = document.getElementById("btn-wrong");
+  if(bw) bw.onclick = ()=>startSession(null,true);
+}
+
+/* ---------- 세션 ---------- */
+function startSession(subject, isWrongNote){
+  let list;
+  if(isWrongNote){
+    list = getWrong().map(findQ).filter(Boolean);
+    if(!list.length){ alert("저장된 오답이 없습니다."); return; }
+  }else{
+    list = [...BANK.subjects[subject]];
+  }
+  Object.assign(state,{view:"solve",subject:isWrongNote?"오답노트":subject,list,idx:0,answers:{},graded:false,isWrongNote});
+  renderSolve();
+}
+
+function renderSolve(){
+  const q = state.list[state.idx];
+  const picked = state.answers[q.id];
+  const showAnswer = state.mode==="practice" && picked!==undefined;
+  const total = state.list.length;
+
+  $app.innerHTML = `
+    <a class="back-link" href="#" id="back">← 처음으로</a>
+    <div class="solve-layout">
+      <section class="q-card">
+        <div class="q-meta">
+          <span>${esc(state.subject)} · ${state.idx+1} / ${total}</span>
+          <span class="tag">${esc(q.tags?.[0]||q.round||"")}</span>
+        </div>
+        <p class="q-text"><span class="q-num">${state.idx+1}.</span>${esc(q.q)}</p>
+        <div class="choices">
+          ${q.choices.map((c,i)=>{
+            const n=i+1;
+            let cls="choice";
+            if(showAnswer){
+              if(n===q.answer) cls+=" correct";
+              else if(n===picked) cls+=" wrong";
+            }else if(n===picked) cls+=" picked";
+            return `<button class="${cls}" data-n="${n}" ${showAnswer?"disabled":""}>
+              <span class="no">${n}</span><span>${esc(c)}</span></button>`;
+          }).join("")}
+        </div>
+        ${showAnswer?`
+          <div class="explain">
+            <span class="ex-label">해설 ${picked===q.answer?"· 정답입니다":"· 오답 (정답 "+q.answer+"번)"}</span>${esc(q.explain||"해설 준비 중")}
+          </div>`:""}
+        <div class="nav-row">
+          <button class="btn ghost" id="prev" ${state.idx===0?"disabled":""}>← 이전</button>
+          ${state.idx===total-1
+            ? `<button class="btn" id="finish">채점하기</button>`
+            : `<button class="btn ghost" id="next">다음 →</button>`}
+        </div>
+      </section>
+
+      <aside class="omr">
+        <h3>OMR 답안지</h3>
+        <div class="omr-grid">
+          ${state.list.map((qq,i)=>{
+            const a=state.answers[qq.id];
+            let cls="omr-cell";
+            if(state.mode==="practice" && a!==undefined) cls += a===qq.answer?" right":" miss";
+            else if(a!==undefined) cls+=" answered";
+            if(i===state.idx) cls+=" cur";
+            return `<button class="${cls}" data-i="${i}">${i+1}</button>`;
+          }).join("")}
+        </div>
+        <div class="omr-foot">${Object.keys(state.answers).length} / ${total} 마킹</div>
+        <button class="btn" id="finish2">채점하기</button>
+      </aside>
+    </div>`;
+
+  document.getElementById("back").onclick=e=>{e.preventDefault();if(confirm("풀이를 중단하고 처음으로 돌아갈까요?")){state.view="home";renderHome();}};
+  $app.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+    state.answers[q.id]=+b.dataset.n;
+    if(state.mode==="practice"){
+      const right = +b.dataset.n===q.answer;
+      if(right) removeWrong(q.id); else addWrong(q.id);
+    }
+    renderSolve();
+  });
+  $app.querySelectorAll(".omr-cell").forEach(b=>b.onclick=()=>{state.idx=+b.dataset.i;renderSolve();});
+  const prev=document.getElementById("prev"), next=document.getElementById("next");
+  if(prev) prev.onclick=()=>{state.idx--;renderSolve();};
+  if(next) next.onclick=()=>{state.idx++;renderSolve();};
+  const fin=()=>{ 
+    const un = state.list.length - Object.keys(state.answers).length;
+    if(un>0 && !confirm(`안 푼 문제가 ${un}개 있습니다. 그래도 채점할까요?`)) return;
+    grade();
+  };
+  const f1=document.getElementById("finish"); if(f1) f1.onclick=fin;
+  document.getElementById("finish2").onclick=fin;
+}
+
+/* ---------- 채점 / 결과 ---------- */
+function grade(){
+  state.list.forEach(q=>{
+    const a=state.answers[q.id];
+    if(a===q.answer) removeWrong(q.id);
+    else addWrong(q.id);
+  });
+  state.graded=true; state.view="result";
+  renderResult();
+}
+
+function renderResult(){
+  const total=state.list.length;
+  const rightList=state.list.filter(q=>state.answers[q.id]===q.answer);
+  const wrongList=state.list.filter(q=>state.answers[q.id]!==q.answer);
+  const score=Math.round(rightList.length/total*100);
+  const pass=score>=70;
+
+  $app.innerHTML = `
+    <div class="result-hero">
+      <div class="score-big ${pass?"pass":"fail"}">${score}점</div>
+      <div class="pass-label ${pass?"pass":"fail"}">${pass?"합격권":"불합격권"}</div>
+      <div class="result-sub">${esc(state.subject)} · ${rightList.length}문항 정답 / ${total}문항 · 합격 기준 70점</div>
+      <div class="result-actions">
+        <button class="btn ghost" id="home">처음으로</button>
+        <button class="btn ${wrongList.length?"red":""}" id="retry" ${wrongList.length?"":"disabled"}>틀린 문제만 다시 풀기</button>
+      </div>
+    </div>
+    ${wrongList.length?`<div class="section-label">오답 해설</div>`:""}
+    ${wrongList.map(q=>{
+      const my=state.answers[q.id];
+      return `<div class="review-item">
+        <div class="rq">${esc(q.q)}</div>
+        <div class="ra"><span class="mark-x">✗ 내 답</span> ${my?my+"번 · "+esc(q.choices[my-1]):"미응답"}</div>
+        <div class="ra"><span class="mark-o">○ 정답</span> ${q.answer}번 · ${esc(q.choices[q.answer-1])}</div>
+        <div class="explain"><span class="ex-label">해설</span>${esc(q.explain||"해설 준비 중")}</div>
+      </div>`;
+    }).join("")}`;
+
+  document.getElementById("home").onclick=()=>{state.view="home";renderHome();};
+  const rt=document.getElementById("retry");
+  if(rt&&wrongList.length) rt.onclick=()=>{
+    Object.assign(state,{view:"solve",list:wrongList,idx:0,answers:{},graded:false});
+    renderSolve();
+  };
+}
+
+renderHome();
+</script>
+</body>
+</html>
